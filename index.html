@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HAMZA | ADVANCED INTELLIGENCE SYSTEM</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+  <style>
+    /* ===== CSS VARIABLES FOR THEMING ===== */
+    :root {
+      /* Dark Theme (Default) */
+      --primary-color: #ff0000;
+      --primary-dark: #cc0000;
+      --primary-light: #ff3333;
+      --accent-color: #ff0000;
+      --bg-primary: #0a0a0a;
+      --bg-secondary: #111111;
+      --bg-tertiary: #1a1a1a;
+      --text-primary: #ffffff;
+      --text-secondary: #cccccc;
+      --text-muted: #888888;
+      --border-color: #333333;
+      --border-glow: rgba(255, 0, 0, 0.3);
+      --shadow-color: rgba(255, 0, 0, 0.2);
+      --success-color: #00ff00;
+      --warning-color: #ff9900;
+      --danger-color: #ff0000;
+      --info-color: #0099ff;
+      
+      /* Glass Effect */
+      --glass-bg: rgba(20, 20, 20, 0.6);
+      --glass-border: rgba(255, 0, 0, 0.25);
+      --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      
+      /* Animation Speeds */
+      --transition-fast: 0.2s;
+      --transition-normal: 0.4s;
+      --transition-slow: 0.8s;
+      
+      /* Fonts */
+      --font-heading: 'Orbitron', sans-serif;
+      --font-body: 'Rajdhani', sans-serif;
+      --font-mono: 'Share Tech Mono', monospace;
+    }
+    
+    /* Light Theme Variables */
+    .light-theme {
+      --primary-color: #d50000;
+      --primary-dark: #b71c1c;
+      --primary-light: #ff5252;
+      --accent-color: #d50000;
+      --bg-primary: #f5f5f5;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #eeeeee;
+      --text-primary: #111111;
+      --text-secondary: #333333;
+      --text-muted: #666666;
+      --border-color: #dddddd;
+      --border-glow: rgba(213, 0, 0, 0.2);
+      --shadow-color: rgba(213, 0, 0, 0.1);
+      --glass-bg: rgba(255, 255, 255, 0.7);
+      --glass-border: rgba(213, 0, 0, 0.15);
+    }
+
+    /* ===== RESET & BASE STYLES ===== */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+      transition: background-color var(--transition-normal);
+      min-height: 100vh;
+      position: relative;
+    }
+
+    /* ===== ANIMATED BACKGROUND ===== */
+    .animated-bg {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -2;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(255, 0, 0, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 0, 0, 0.03) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(0, 0, 0, 0.05) 0%, transparent 50%),
+        linear-gradient(to bottom, var(--bg-primary), var(--bg-secondary));
+    }
+    .grid-line { position: absolute; background: linear-gradient(90deg, transparent, var(--primary-color), transparent); z-index: -1; }
+    .grid-line.horizontal { width: 100%; height: 1px; animation: scanHorizontal 8s linear infinite; }
+    .grid-line.vertical { height: 100%; width: 1px; animation: scanVertical 12s linear infinite; }
+    @keyframes scanHorizontal { 0% { top: 0; opacity: 0; } 10% { opacity: 0.7; } 90% { opacity: 0.7; } 100% { top: 100%; opacity: 0; } }
+    @keyframes scanVertical { 0% { left: 0; opacity: 0; } 10% { opacity: 0.5; } 90% { opacity: 0.5; } 100% { left: 100%; opacity: 0; } }
+
+    /* ===== CRT EFFECT ===== */
+    .crt-effect::before {
+      content: " "; display: block; position: fixed; top: 0; left: 0; bottom: 0; right: 0;
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%);
+      background-size: 100% 4px; z-index: 999; pointer-events: none; opacity: 0.4;
+    }
+
+    /* ===== CONTAINERS & LAYOUT ===== */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+    .main-content { padding: 40px 0; position: relative; }
+
+    /* ===== HEADER & NAVIGATION ===== */
+    .main-header { padding: 20px 0; position: relative; z-index: 100; }
+    .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--border-color); }
+    .logo-container { display: flex; align-items: center; gap: 15px; }
+    .logo-circle {
+      width: 70px; height: 70px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+      display: flex; align-items: center; justify-content: center; position: relative;
+      animation: pulseGlow 3s infinite alternate; box-shadow: 0 0 30px var(--primary-color);
+    }
+    .logo-circle::before { content: ''; position: absolute; width: 60px; height: 60px; border-radius: 50%; border: 2px dashed var(--primary-light); animation: spin 20s linear infinite; }
+    .logo-text {
+      font-family: var(--font-heading); font-size: 2.2rem; font-weight: 900;
+      background: linear-gradient(to right, var(--primary-color), #ffffff); -webkit-background-clip: text; background-clip: text; color: transparent;
+      letter-spacing: 3px; text-transform: uppercase; position: relative;
+    }
+    .theme-toggle { display: flex; align-items: center; gap: 10px; background: var(--bg-tertiary); border-radius: 50px; padding: 5px; cursor: pointer; transition: all var(--transition-fast); border: 1px solid var(--border-color); }
+    .theme-toggle:hover { transform: translateY(-2px); box-shadow: 0 5px 15px var(--shadow-color); }
+    .theme-btn { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: transparent; border: none; color: var(--text-primary); cursor: pointer; transition: all var(--transition-fast); }
+    .theme-btn.active { background: var(--primary-color); color: white; }
+
+    /* ===== GLASS CARDS ===== */
+    .glass-card {
+      background: var(--glass-bg); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+      border-radius: 15px; border: 1px solid var(--glass-border); box-shadow: var(--glass-shadow);
+      padding: 30px; position: relative; overflow: hidden; margin-bottom: 30px;
+      transition: all var(--transition-normal); animation: floatCard 6s ease-in-out infinite;
+    }
+    .glass-card:hover { transform: translateY(-5px); box-shadow: 0 15px 40px var(--shadow-color); border-color: var(--primary-color); }
+    @keyframes floatCard { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+    /* ===== HERO SECTION ===== */
+    .hero-section { text-align: center; margin-bottom: 50px; }
+    .hero-title {
+      font-family: var(--font-heading); font-size: 3.5rem; font-weight: 900; margin-bottom: 15px;
+      text-transform: uppercase; letter-spacing: 4px; background: linear-gradient(to right, var(--primary-color), #ffffff);
+      -webkit-background-clip: text; background-clip: text; color: transparent; animation: glitch 3s infinite; position: relative;
+    }
+    @keyframes glitch {
+      0%, 100% { transform: translateX(0); text-shadow: 2px 0 var(--primary-color), -2px 0 #00ffff; }
+      95% { transform: translateX(0); text-shadow: 2px 0 var(--primary-color), -2px 0 #00ffff; }
+      96% { transform: translateX(-2px); text-shadow: 4px 0 var(--primary-color), -4px 0 #00ffff; }
+      97% { transform: translateX(2px); text-shadow: -4px 0 var(--primary-color), 4px 0 #00ffff; }
+      98% { transform: translateX(0); text-shadow: 2px 0 var(--primary-color), -2px 0 #00ffff; }
+    }
+    .hero-subtitle { font-family: var(--font-mono); font-size: 1.2rem; color: var(--text-secondary); letter-spacing: 2px; margin-bottom: 30px; }
+
+    /* ===== SEARCH SECTION ===== */
+    .search-section { margin-bottom: 50px; }
+    .search-form { position: relative; }
+    .input-group { position: relative; margin-bottom: 25px; }
+    .input-icon { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--primary-color); font-size: 1.2rem; z-index: 2; }
+    .search-input {
+      width: 100%; padding: 20px 20px 20px 60px; background: var(--bg-tertiary); border: 2px solid var(--border-color);
+      border-radius: 12px; font-family: var(--font-mono); font-size: 1.3rem; color: var(--text-primary); transition: all var(--transition-normal);
+    }
+    .search-input:focus { outline: none; border-color: var(--primary-color); box-shadow: 0 0 20px var(--shadow-color); background: var(--bg-secondary); }
+    .search-btn {
+      width: 100%; padding: 20px; background: linear-gradient(135deg, var(--primary-dark), var(--primary-color));
+      border: none; border-radius: 12px; color: white; font-family: var(--font-heading); font-size: 1.3rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 2px; cursor: pointer; transition: all var(--transition-normal); position: relative; overflow: hidden;
+    }
+    .search-btn::before { content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent); transition: left 0.7s; }
+    .search-btn:hover::before { left: 100%; }
+    .search-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 30px var(--shadow-color); }
+
+    /* ===== RESULTS PANEL ===== */
+    .results-panel { margin-bottom: 50px; display: none; }
+    .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 2px solid var(--primary-color); }
+    .panel-title { font-family: var(--font-heading); font-size: 1.8rem; color: var(--primary-color); text-transform: uppercase; letter-spacing: 2px; }
+    .panel-actions { display: flex; gap: 15px; }
+    .action-btn {
+      padding: 10px 20px; background: var(--bg-tertiary); border: 2px solid var(--border-color); border-radius: 8px; color: var(--text-primary);
+      font-family: var(--font-body); font-weight: 600; cursor: pointer; transition: all var(--transition-fast); display: flex; align-items: center; gap: 8px;
+    }
+    .action-btn:hover { background: var(--primary-color); color: white; border-color: var(--primary-color); transform: translateY(-2px); }
+    .results-container { min-height: 200px; position: relative; padding: 20px; background: var(--bg-tertiary); border-radius: 12px; overflow: hidden; }
+    .results-watermark {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-family: var(--font-heading);
+      font-size: 8rem; font-weight: 900; color: rgba(255, 0, 0, 0.15); white-space: nowrap; pointer-events: none; z-index: 1;
+      text-transform: uppercase; letter-spacing: 20px; text-shadow: 0 0 30px rgba(255, 0, 0, 0.3);
+    }
+    
+    /* === NEW SPLIT LAYOUT === */
+    .split-layout {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        position: relative;
+        z-index: 2;
+    }
+    
+    .info-box, .sims-box {
+        background: var(--bg-secondary);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        padding: 20px;
+        position: relative;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+
+    .info-box { border-left: 4px solid var(--success-color); }
+    .sims-box { border-left: 4px solid var(--primary-color); }
+
+    .box-header {
+        font-family: var(--font-heading);
+        font-size: 1.2rem;
+        color: var(--text-primary);
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .info-row {
+        margin-bottom: 15px;
+    }
+    .info-label {
+        display: block;
+        color: var(--text-secondary);
+        font-size: 0.9rem;
+        font-family: var(--font-mono);
+        margin-bottom: 5px;
+    }
+    .info-value {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: var(--text-primary);
+        word-break: break-word;
+    }
+    
+    .sim-list {
+        max-height: 300px;
+        overflow-y: auto;
+    }
+    .sim-item {
+        background: rgba(255,255,255,0.05);
+        padding: 10px;
+        margin-bottom: 8px;
+        border-radius: 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 1px solid transparent;
+    }
+    .sim-item:hover {
+        border-color: var(--primary-color);
+        background: rgba(255,0,0,0.1);
+    }
+
+    
+    /* Loading Animation */
+    .loading-container { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; position: relative; z-index: 2; }
+    .loading-spinner { width: 60px; height: 60px; border: 4px solid var(--border-color); border-top-color: var(--primary-color); border-radius: 50%; animation: spin 1s linear infinite; margin-bottom: 15px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ===== FEATURES SECTION ===== */
+    .features-section { margin-bottom: 50px; }
+    .section-title {
+      font-family: var(--font-heading); font-size: 2.2rem; text-align: center; margin-bottom: 40px; text-transform: uppercase;
+      letter-spacing: 3px; color: var(--primary-color); position: relative;
+    }
+    .section-title::after { content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); width: 100px; height: 4px; background: linear-gradient(to right, transparent, var(--primary-color), transparent); }
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+    .feature-card { background: var(--bg-secondary); border-radius: 15px; padding: 30px; text-align: center; border-top: 5px solid var(--primary-color); transition: all var(--transition-normal); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); }
+    .feature-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2); }
+    .feature-icon { font-size: 3rem; color: var(--primary-color); margin-bottom: 20px; }
+    .feature-title { font-family: var(--font-heading); font-size: 1.5rem; margin-bottom: 15px; color: var(--text-primary); }
+    .feature-description { color: var(--text-secondary); font-size: 1.1rem; }
+
+    /* ===== CONTACT SECTION ===== */
+    .contact-section { text-align: center; margin-bottom: 50px; }
+    .social-links { display: flex; justify-content: center; gap: 25px; margin-top: 30px; }
+    .social-link {
+      width: 60px; height: 60px; border-radius: 50%; background: var(--bg-tertiary); display: flex; align-items: center; justify-content: center;
+      color: var(--text-primary); font-size: 1.8rem; text-decoration: none; transition: all var(--transition-normal); border: 2px solid transparent;
+    }
+    .social-link:hover { background: var(--primary-color); color: white; transform: translateY(-5px) scale(1.1); box-shadow: 0 10px 25px var(--shadow-color); border-color: var(--primary-color); }
+
+    /* ===== FOOTER ===== */
+    .main-footer { padding: 30px 0; text-align: center; border-top: 1px solid var(--border-color); margin-top: 50px; font-family: var(--font-mono); color: var(--text-muted); }
+    .footer-text { font-size: 0.9rem; letter-spacing: 1px; }
+
+    /* ===== ANIMATED ELEMENTS ===== */
+    .particles-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: -1; }
+    .particle { position: absolute; background: var(--primary-color); border-radius: 50%; opacity: 0.3; animation: floatParticle 15s infinite linear; }
+    @keyframes floatParticle { 0% { transform: translateY(100vh) translateX(0); } 100% { transform: translateY(-100px) translateX(100px); } }
+
+    /* ===== UPDATED MODAL & AD SYSTEM ===== */
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.95);
+      display: none; justify-content: center; align-items: center; z-index: 2000;
+    }
+    .modal-content {
+      background: var(--bg-secondary); border-radius: 10px; width: 95%; height: 85vh; max-width: 100%;
+      border: 3px solid var(--primary-color); box-shadow: 0 0 80px var(--primary-color); overflow: hidden; position: relative;
+    }
+    .modal-header {
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary-color)); padding: 20px; text-align: center;
+      font-family: var(--font-heading); font-size: 1.8rem; color: white; position: relative;
+    }
+    .modal-body { height: calc(100% - 70px); position: relative; background: #000; }
+    .modal-timer {
+      position: absolute; top: 15px; right: 15px; background: var(--primary-color); color: white; width: 60px; height: 60px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center; font-family: var(--font-heading); font-size: 1.8rem; font-weight: 700;
+      box-shadow: 0 0 30px var(--primary-color); animation: pulse 1.5s infinite; z-index: 10;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 768px) {
+      .hero-title { font-size: 2.2rem; }
+      .panel-header { flex-direction: column; gap: 15px; }
+      .panel-actions { width: 100%; justify-content: center; flex-wrap: wrap; }
+      .split-layout { grid-template-columns: 1fr; } /* Stack boxes on mobile */
+      .features-grid { grid-template-columns: 1fr; }
+      .logo-text { font-size: 1.6rem; }
+      .results-watermark { font-size: 4rem; letter-spacing: 10px; }
+      .modal-content { height: 80vh; width: 97%; }
+      .modal-header { font-size: 1.4rem; padding: 15px; }
+      .modal-timer { width: 50px; height: 50px; font-size: 1.5rem; }
+    }
+  </style>
+</head>
+<body class="crt-effect">
+  <div class="animated-bg"></div>
+  
+  <div class="grid-line horizontal" style="top: 20%; animation-delay: 0s;"></div>
+  <div class="grid-line horizontal" style="top: 50%; animation-delay: 2s;"></div>
+  <div class="grid-line horizontal" style="top: 80%; animation-delay: 4s;"></div>
+  <div class="grid-line vertical" style="left: 30%; animation-delay: 1s;"></div>
+  <div class="grid-line vertical" style="left: 70%; animation-delay: 3s;"></div>
+  
+  <div class="particles-container" id="particles"></div>
+
+  <div class="container">
+    <header class="main-header">
+      <div class="header-top">
+        <div class="logo-container">
+          <div class="logo-circle">
+            <i class="fas fa-skull-crossbones fa-2x"></i>
+          </div>
+          <div class="logo-text">HAMZA</div>
+        </div>
+        
+        <div class="theme-toggle" id="themeToggle">
+          <button class="theme-btn active" id="darkBtn" title="Dark Mode"><i class="fas fa-moon"></i></button>
+          <button class="theme-btn" id="lightBtn" title="Light Mode"><i class="fas fa-sun"></i></button>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <section class="hero-section">
+        <h1 class="hero-title">ADVANCED INTELLIGENCE SYSTEM</h1>
+        <p class="hero-subtitle">// SECURE DATABASE ACCESS // VERSION 1.0 //</p>
+      </section>
+
+      <section class="search-section">
+        <div class="glass-card">
+          <div style="text-align: center; margin-bottom: 25px;">
+            <div style="display: inline-flex; align-items: center; gap: 10px; background: var(--bg-tertiary); padding: 10px 25px; border-radius: 50px; border: 2px solid var(--primary-color);">
+              <i class="fas fa-database" style="color: var(--primary-color); font-size: 1.5rem;"></i>
+              <span style="font-family: var(--font-heading); font-size: 1.3rem; letter-spacing: 2px;">PERSON LOOKUP TOOL</span>
+            </div>
+          </div>
+          
+          <form class="search-form" id="searchForm">
+            <div class="input-group">
+              <div class="input-icon"><i class="fas fa-crosshairs"></i></div>
+              <input type="text" class="search-input" id="searchInput" placeholder="ENTER PHONE (03...) OR CNIC (35...)" maxlength="13" required>
+            </div>
+            
+            <button type="submit" class="search-btn">
+              <i class="fas fa-bolt"></i> INITIATE DATA RETRIEVAL
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <section class="results-panel" id="resultsPanel">
+        <div class="glass-card">
+          <div class="panel-header">
+            <h2 class="panel-title">RETRIEVED INTELLIGENCE DATA</h2>
+            <div class="panel-actions">
+              <button class="action-btn" id="saveBtn"><i class="fas fa-camera"></i> SAVE SCREENSHOT</button>
+              <button class="action-btn" id="clearBtn"><i class="fas fa-trash"></i> CLEAR RESULTS</button>
+            </div>
+          </div>
+          
+          <div class="results-container">
+            <div class="results-watermark">HAMZA</div>
+            <div id="resultsContent"></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="features-section">
+        <h2 class="section-title">OUR SERVICES</h2>
+        
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+            <h3 class="feature-title">CNIC / SIM VERIFICATION</h3>
+            <p class="feature-description">Complete verification system for Pakistani CNIC and SIM databases with real-time updates.</p>
+          </div>        
+          
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-history"></i></div>
+            <h3 class="feature-title">CALL DATA RECORDS</h3>
+            <p class="feature-description">Complete CDR access for all major networks with detailed call history and location tracking.</p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-user-secret"></i></div>
+            <h3 class="feature-title">NADRA DATA ACCESS</h3>
+            <p class="feature-description">Secure access to NADRA database with full citizen information and verification capabilities.</p>
+          </div>
+          
+          <div class="feature-card">
+            <div class="feature-icon"><i class="fas fa-user-secret"></i></div>
+            <h4 class="feature-title">FAMILY TREE</h4>
+            <p class="feature-description">Secure and authorized access to NADRA database with full citizen profiles, family tree information, and identity verification features./p>
+          </div>
+        </div>
+      </section>
+
+      <section class="contact-section">
+        <div class="glass-card">
+          <h2 class="section-title">CONTACT ADMIN</h2>
+          <p style="margin-bottom: 20px; font-size: 1.2rem;">For premium access, custom requests, or technical support</p>
+          
+          <div class="social-links">
+            <a href="https://wa.me/923260050006" target="_blank" class="social-link"><i class="fab fa-whatsapp"></i></a>
+            <a href="https://t.me/HUZIIBALOCH" target="_blank" class="social-link"><i class="fab fa-telegram"></i></a>
+            <a href="mailto:admin@blackworld.com" class="social-link"><i class="fas fa-envelope"></i></a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="main-footer">
+      <div class="footer-text">
+        HAMZA INTELLIGENCE SYSTEM | OWNER: HAMZA HACKER | VERSION 9.0 | SECURE CONNECTION
+      </div>
+    </footer>
+  </div>
+
+  <div class="modal-overlay" id="adModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <i class="fas fa-lock"></i> SYSTEM BREACH IN PROGRESS
+        <div class="modal-timer" id="modalTimer">10</div>
+      </div>
+      <div class="modal-body">
+        <iframe 
+          src="https://www.effectivegatecpm.com/fax36edu?key=b1dd0df6304b67bd22b75571367d711b" 
+          style="width:100%; height:100%; border:none;"
+          title="Advertisement"
+          allow="autoplay; fullscreen"
+          scrolling="no">
+        </iframe>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ===== INITIALIZATION =====
+    document.addEventListener('DOMContentLoaded', function() {
+      createParticles();
+      initEventListeners();
+      const savedTheme = localStorage.getItem('bw-theme');
+      if (savedTheme === 'light') { setLightTheme(); }
+    });
+
+    // ===== THEME TOGGLE =====
+    function initEventListeners() {
+      document.getElementById('darkBtn').addEventListener('click', setDarkTheme);
+      document.getElementById('lightBtn').addEventListener('click', setLightTheme);
+      
+      document.getElementById('searchForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const query = document.getElementById('searchInput').value.trim();
+        
+        if (!query) {
+          showNotification('Please enter a Number or CNIC', 'error');
+          return;
+        }
+        
+        if (query.length < 10) {
+           showNotification('Invalid format. Enter 11 digit Phone or 13 digit CNIC', 'error');
+           return; 
+        }
+
+        // Show Ad then Search
+        showAdModal(() => {
+            performSearch(query);
+        });
+      });
+      
+      document.getElementById('saveBtn').addEventListener('click', takeScreenshot);
+      document.getElementById('clearBtn').addEventListener('click', clearResults);
+    }
+
+    function setDarkTheme() {
+      document.body.classList.remove('light-theme');
+      document.getElementById('darkBtn').classList.add('active');
+      document.getElementById('lightBtn').classList.remove('active');
+      localStorage.setItem('bw-theme', 'dark');
+    }
+
+    function setLightTheme() {
+      document.body.classList.add('light-theme');
+      document.getElementById('lightBtn').classList.add('active');
+      document.getElementById('darkBtn').classList.remove('active');
+      localStorage.setItem('bw-theme', 'light');
+    }
+
+    // ===== AD MODAL LOGIC =====
+    function showAdModal(callback) {
+      const modal = document.getElementById('adModal');
+      const timer = document.getElementById('modalTimer');
+      let seconds = 10;
+      
+      modal.style.display = 'flex';
+      timer.textContent = seconds;
+      
+      const iframe = modal.querySelector('iframe');
+      iframe.src = iframe.src; // Reload iframe
+      
+      const countdown = setInterval(() => {
+        seconds--;
+        timer.textContent = seconds;
+        
+        if (seconds <= 0) {
+          clearInterval(countdown);
+          modal.style.display = 'none';
+          callback();
+        }
+      }, 1000);
+    }
+
+    // ===== SEARCH FUNCTIONALITY =====
+    async function performSearch(query) {
+      const panel = document.getElementById('resultsPanel');
+      const content = document.getElementById('resultsContent');
+      
+      panel.style.display = 'block';
+      panel.scrollIntoView({ behavior: 'smooth' });
+      
+      content.innerHTML = `
+        <div class="loading-container">
+          <div class="loading-spinner"></div>
+          <h3 style="color: var(--primary-color); margin-bottom: 10px;">DECRYPTING DATABASE...</h3>
+          <p style="color: var(--text-secondary);">Accessing secure intelligence network</p>
+        </div>
+      `;
+      
+      try {
+        const apiUrl = `https://blacksimdetail.vercel.app/public_apis/simdetailsapi.php?number=${query}`;
+
+        const response = await fetch(apiUrl);
+        const jsonData = await response.json();
+
+        if (jsonData.message && jsonData.message.toLowerCase().includes("premium")) {
+             displayPremiumError(jsonData.message, jsonData.developed_by);
+        }
+        else if (jsonData.data && jsonData.data.length > 0) {
+             // New Function to Display Split Result
+             displaySplitResults(jsonData.data);
+             showNotification('ACCESS GRANTED', 'success');
+        }
+        else {
+             showNoResults();
+        }
+
+      } catch (error) {
+        console.error('Search error:', error);
+        content.innerHTML = `
+             <div style="text-align: center; padding: 30px; position: relative; z-index: 2;">
+                <i class="fas fa-exclamation-triangle fa-3x" style="color: var(--danger-color); margin-bottom: 20px;"></i>
+                <h3 style="color: var(--danger-color); margin-bottom: 15px;">CONNECTION FAILED</h3>
+                <p style="color: var(--text-secondary);">Server unresponsive. Check connection.</p>
+             </div>
+        `;
+      }
+    }
+
+    // ===== NEW SPLIT DISPLAY FUNCTION =====
+    function displaySplitResults(data) {
+        const content = document.getElementById('resultsContent');
+        
+        // Take the first record for personal info
+        const person = data[0];
+        
+        // Generate list of numbers
+        let simListHTML = '';
+        data.forEach(item => {
+            simListHTML += `
+                <div class="sim-item">
+                    <span style="font-family: var(--font-mono); font-size: 1.1rem; font-weight: bold;">${item.Mobile}</span>
+                    <i class="fas fa-sim-card" style="color: var(--text-muted);"></i>
+                </div>
+            `;
+        });
+
+        content.innerHTML = `
+            <div class="split-layout">
+                <div class="info-box">
+                    <div class="box-header">
+                        <i class="fas fa-user-circle"></i> PERSONAL DETAILS
+                    </div>
+                    
+                    <div class="info-row">
+                        <span class="info-label">FULL NAME</span>
+                        <span class="info-value">${person.Name || 'Unknown'}</span>
+                    </div>
+                    
+                    <div class="info-row">
+                        <span class="info-label">CNIC NUMBER</span>
+                        <span class="info-value" style="color: var(--primary-color);">${person.CNIC || 'N/A'}</span>
+                    </div>
+                    
+                    <div class="info-row">
+                        <span class="info-label">ADDRESS</span>
+                        <span class="info-value" style="font-size: 0.95rem;">${person.Address || 'N/A'}</span>
+                    </div>
+                </div>
+
+                <div class="sims-box">
+                    <div class="box-header">
+                        <i class="fas fa-mobile-alt"></i> REGISTERED NUMBERS (${data.length})
+                    </div>
+                    
+                    <div class="sim-list">
+                        ${simListHTML}
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 20px; padding-top: 15px; border-top: 1px dashed var(--border-color); position: relative; z-index: 2;">
+                <p style="color: var(--text-muted); font-family: var(--font-mono); font-size: 0.9rem;">
+                    CREDITS: <span style="color: var(--primary-color);">HAMZA</span> | 
+                    TIMESTAMP: ${new Date().toLocaleString()}
+                </p>
+            </div>
+        `;
+    }
+
+    function displayPremiumError(msg, dev) {
+        const content = document.getElementById('resultsContent');
+        content.innerHTML = `
+            <div style="text-align: center; padding: 30px; border: 2px dashed #ffeb3b; background: rgba(255, 235, 59, 0.05); border-radius: 10px; position: relative; z-index: 2;">
+                <i class="fas fa-crown fa-3x" style="color: #ffeb3b; margin-bottom: 20px; animation: pulse 2s infinite;"></i>
+                <h3 style="color: #ffeb3b; margin-bottom: 15px; font-family: var(--font-heading);">ACCESS RESTRICTED</h3>
+                <p style="color: #fff; margin-bottom: 20px; font-size: 1.1rem;">${msg}</p>
+                <div style="font-size: 0.8rem; color: #888; margin-top: 15px;">DEV: ${dev || 'Hamza'}</div>
+                <br>
+                <a href="https://wa.me/923260050006" target="_blank" class="action-btn" style="display: inline-flex; border-color: #ffeb3b; color: #ffeb3b;">
+                    <i class="fab fa-whatsapp"></i> BUY PREMIUM
+                </a>
+            </div>
+        `;
+    }
+
+    function showNoResults() {
+      const content = document.getElementById('resultsContent');
+      content.innerHTML = `
+        <div style="text-align: center; padding: 30px; position: relative; z-index: 2;">
+          <i class="fas fa-search-minus fa-3x" style="color: var(--text-muted); margin-bottom: 20px;"></i>
+          <h3 style="color: var(--primary-color); margin-bottom: 15px;">NO DATA FOUND</h3>
+          <p style="color: var(--text-secondary); margin-bottom: 25px;">
+            No records found for the entered Number or CNIC.
+          </p>
+        </div>
+      `;
+    }
+
+    function clearResults() {
+      document.getElementById('resultsPanel').style.display = 'none';
+      document.getElementById('resultsContent').innerHTML = '';
+      document.getElementById('searchInput').value = '';
+    }
+
+    // ===== SCREENSHOT FUNCTION =====
+    function takeScreenshot() {
+      const button = document.getElementById('saveBtn');
+      const originalHTML = button.innerHTML;
+      
+      button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> CAPTURING...';
+      button.disabled = true;
+      
+      const element = document.getElementById('resultsPanel');
+      
+      html2canvas(element, {
+        backgroundColor: getComputedStyle(document.body).backgroundColor,
+        useCORS: true,
+        scale: 2,
+        logging: false
+      }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `BLACK_WORLD_INTEL_${Date.now()}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        
+        button.innerHTML = '<i class="fas fa-check"></i> SAVED!';
+        setTimeout(() => {
+          button.innerHTML = originalHTML;
+          button.disabled = false;
+        }, 2000);
+      });
+    }
+
+    // ===== PARTICLES =====
+    function createParticles() {
+      const container = document.getElementById('particles');
+      for (let i = 0; i < 30; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
+        const size = Math.random() * 4 + 1;
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.animationDelay = `${Math.random() * 15}s`;
+        particle.style.animationDuration = `${Math.random() * 10 + 10}s`;
+        container.appendChild(particle);
+      }
+    }
+
+    // ===== UTILITY =====
+    function showNotification(message, type = 'info') {
+      const notification = document.createElement('div');
+      notification.textContent = message;
+      notification.style.cssText = `
+        position: fixed; top: 20px; right: 20px;
+        background: ${type === 'success' ? 'var(--success-color)' : type === 'error' ? 'var(--danger-color)' : 'var(--primary-color)'};
+        color: white; padding: 15px 25px; border-radius: 8px;
+        font-family: var(--font-body); font-weight: 600; z-index: 3000;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3); transform: translateX(100%);
+        transition: transform 0.3s ease; border-left: 4px solid white;
+      `;
+      document.body.appendChild(notification);
+      setTimeout(() => { notification.style.transform = 'translateX(0)'; }, 10);
+      setTimeout(() => {
+        notification.style.transform = 'translateX(100%)';
+        setTimeout(() => { document.body.removeChild(notification); }, 300);
+      }, 3000);
+    }
+    
+    // Updated Input Sanitization for CNIC length (13 digits)
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+      this.value = this.value.replace(/\D/g, '').substring(0, 13);
+    });
+  </script>
+</body>
+</html>
